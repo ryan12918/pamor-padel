@@ -4,101 +4,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PADEL LOVERS - Live Score</title>
-    
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
     
     <style>
-        /* --- TEMA FINAL --- */
         :root { 
-            --primary: #C2185B;      
-            --primary-dark: #880E4F; 
-            --accent: #F8BBD0;       
-            --bg-color: #FDF2F5;     
-            --live-neon: #76FF03;    
-            --text-dark: #333;
-            --card-shadow: 0 4px 15px rgba(194, 24, 91, 0.08);
+            --primary: #C2185B; --primary-dark: #880E4F; --accent: #F8BBD0; 
+            --bg-color: #FDF2F5; --live-neon: #76FF03; --text-dark: #333;
         }
-        
         body { 
-            font-family: 'Montserrat', sans-serif; 
-            background-color: var(--bg-color);
+            font-family: 'Montserrat', sans-serif; background-color: var(--bg-color);
             background-image: radial-gradient(#E91E63 0.5px, transparent 0.5px);
-            background-size: 20px 20px;
-            margin: 0; padding-bottom: 90px; color: var(--text-dark); 
+            background-size: 20px 20px; margin: 0; padding-bottom: 90px; color: var(--text-dark); 
         }
         
-        /* --- HEADER --- */
+        /* HEADER */
         .header-wrapper {
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            padding: 25px 20px 40px 20px;
-            text-align: center; color: white;
+            padding: 25px 20px 40px 20px; text-align: center; color: white;
             border-bottom-left-radius: 30px; border-bottom-right-radius: 30px;
-            position: sticky; top: 0; z-index: 99;
+            position: sticky; top: 0; z-index: 99; margin-bottom: 20px;
             box-shadow: 0 4px 20px rgba(136, 14, 79, 0.3);
-            overflow: hidden; margin-bottom: 20px;
         }
-
-        /* Tombol Refresh Manual */
+        .header-title { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 1px; }
+        .header-sub { font-size: 13px; font-weight: 600; margin-top: 4px; color: #FFECB3; }
+        .header-tag { display: inline-block; margin-top: 10px; background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; font-size: 10px; font-weight: 800; }
+        
+        /* REFRESH BTN */
         .refresh-btn {
             position: absolute; top: 20px; right: 20px;
-            background: rgba(255,255,255,0.2); backdrop-filter: blur(5px);
             width: 35px; height: 35px; border-radius: 50%;
+            background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3);
             display: flex; align-items: center; justify-content: center;
-            cursor: pointer; z-index: 100; transition: all 0.2s;
-            border: 1px solid rgba(255,255,255,0.3); font-size: 18px;
+            cursor: pointer; z-index: 100; font-size: 18px;
         }
-        .refresh-btn:active { transform: scale(0.9); background: rgba(255,255,255,0.4); }
-        .spin-anim { animation: spin 1s linear infinite; pointer-events: none; opacity: 0.7; }
+        .spin-anim { animation: spin 1s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
-
-        .padel-ball-bg {
-            position: absolute; top: -20px; right: -20px; width: 120px; height: 120px;
-            border-radius: 50%; background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.15); z-index: 0; pointer-events: none;
-        }
-        .padel-ball-bg::before {
-            content: ''; position: absolute; top: 15%; left: 15%; right: 15%; bottom: 15%;
-            border-radius: 50%; border: 2px solid transparent;
-            border-left-color: rgba(255, 255, 255, 0.2); border-top-color: rgba(255, 255, 255, 0.2);
-            transform: rotate(-45deg);
-        }
-
-        .header-content { position: relative; z-index: 1; pointer-events: none; }
-        .header-title { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .header-sub { font-size: 13px; font-weight: 600; margin-top: 4px; opacity: 0.95; color: #FFECB3; letter-spacing: 0.5px; }
-        .header-tag { 
-            display: inline-block; margin-top: 10px; 
-            background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; 
-            font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
-        }
 
         .container { max-width: 500px; margin: 0 auto; padding: 0 15px; }
         .hidden { display: none; }
 
-        /* Loading Animation */
+        /* LOADING */
         .loading-container { text-align: center; padding: 50px 0; }
-        .bouncing-ball {
-            width: 15px; height: 15px; background: var(--primary); border-radius: 50%;
-            margin: 0 auto; animation: bounce 0.6s infinite alternate;
-        }
-        .loading-text { margin-top: 10px; font-size: 12px; color: var(--primary); font-weight: 600; }
-        @keyframes bounce { from { transform: translateY(0); opacity: 0.8; } to { transform: translateY(-20px); opacity: 1; } }
+        .bouncing-ball { width: 15px; height: 15px; background: var(--primary); border-radius: 50%; margin: 0 auto; animation: bounce 0.6s infinite alternate; }
+        @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-20px); } }
 
-        /* --- KARTU PERTANDINGAN --- */
+        /* KARTU MATCH */
         .match-card { 
             background: white; padding: 15px 20px; margin-bottom: 15px; 
-            border-radius: 20px; box-shadow: var(--card-shadow);
-            border: 1px solid rgba(194, 24, 91, 0.05); position: relative; transition: all 0.3s;
+            border-radius: 20px; box-shadow: 0 4px 15px rgba(194, 24, 91, 0.08);
+            border: 1px solid rgba(194, 24, 91, 0.05); transition: all 0.3s;
         }
-        .match-card:active { transform: scale(0.98); }
-
-        .match-meta { 
-            display: flex; justify-content: space-between; align-items: center; 
-            font-size: 11px; color: #888; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px dashed #eee;
-        }
-        .meta-right { font-weight: 600; color: #666; font-size: 10px; letter-spacing: 0.5px; } 
+        .match-meta { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #888; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px dashed #eee; }
         .babak-pill { background: #FFF3E0; color: #E65100; padding: 3px 10px; border-radius: 10px; font-weight: 800; font-size: 10px; text-transform: uppercase; }
-
+        
         .match-body { display: flex; align-items: center; justify-content: space-between; }
         .team { flex: 1; font-weight: 600; font-size: 14px; line-height: 1.3; color: #444; }
         .team.left { text-align: left; }
@@ -109,72 +67,50 @@
             color: white; padding: 6px 18px; border-radius: 30px; 
             font-size: 18px; font-weight: 800; min-width: 50px; text-align: center; 
             box-shadow: 0 4px 10px rgba(194, 24, 91, 0.2); margin: 0 10px;
+            transition: background 0.3s;
         }
-        .score-pill.empty { 
-            background: white; color: var(--primary); border: 2px solid var(--accent);
-            box-shadow: none; font-size: 14px; padding: 4px 14px;
-        }
-
-        /* --- LOGIKA STATUS: LIVE & SELESAI --- */
+        
+        /* STATUS STYLES */
         .match-card.is-live { border: 2px solid var(--live-neon); box-shadow: 0 0 15px rgba(118, 255, 3, 0.3); }
-        .match-card.is-live .score-pill {
-            background: var(--live-neon); color: black; box-shadow: 0 0 10px var(--live-neon);
-            animation: pulse-score 1.5s infinite;
-        }
-        
-        .match-card.is-finished { 
-            opacity: 0.6; filter: grayscale(100%); background: #f2f2f2; box-shadow: none; border: 1px solid #ddd; 
-        }
+        .match-card.is-live .score-pill { background: var(--live-neon); color: black; box-shadow: 0 0 10px var(--live-neon); }
+        .match-card.is-finished { opacity: 0.6; filter: grayscale(100%); background: #f2f2f2; }
         .match-card.is-finished .score-pill { background: #999; color: white; box-shadow: none; }
-        
-        @keyframes pulse-score { 50% { transform: scale(1.05); } }
-        
-        .live-indicator { 
-            position: absolute; top: 12px; right: 15px;
-            color: #4CAF50; font-weight: 800; font-size: 10px; 
-            display: flex; align-items: center; gap: 4px;
-        }
+        .score-pill.empty { background: white; color: var(--primary); border: 2px solid var(--accent); box-shadow: none; font-size: 14px; padding: 4px 14px; }
+
+        /* LIVE INDICATOR */
+        .live-indicator { color: #4CAF50; font-weight: 800; font-size: 10px; display: flex; align-items: center; gap: 4px; }
         .dot-live { width: 8px; height: 8px; background: var(--live-neon); border-radius: 50%; animation: blink 1s infinite; }
+        .meta-right { font-weight: 600; color: #666; font-size: 10px; }
 
-        /* Klasemen & Navigasi */
-        .grup-card { background: white; border-radius: 15px; margin-bottom: 20px; overflow: hidden; box-shadow: var(--card-shadow); border: none; }
-        .grup-header { background: #FFF0F5; padding: 12px 15px; color: var(--primary); font-size: 14px; font-weight: 800; border-bottom: 1px solid #fce4ec; letter-spacing: 0.5px; }
-        table { width: 100%; border-collapse: collapse; font-size: 12px; }
-        th { background: white; color: #999; padding: 10px 5px; font-size: 9px; font-weight: 800; border-bottom: 2px solid #f0f0f0; text-transform: uppercase; }
-        td { padding: 12px 5px; border-bottom: 1px solid #f9f9f9; text-align: center; color: #444; font-weight: 600; }
-        th:nth-child(2), td:nth-child(2) { text-align: left; padding-left: 10px; width: 40%; }
-        tr.status-win { background-color: #FFFDE7; }
-        tr.status-win td { color: #F57F17; font-weight: 800; }
-        tr.status-win td:nth-child(2) { color: var(--primary); }
-        .legend-box { display: flex; gap: 10px; justify-content: center; font-size: 10px; color: #888; margin-bottom: 15px; flex-wrap: wrap; }
-        .legend-tag { background: white; padding: 4px 10px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); font-weight: 600; }
-
-        .nav { 
-            position: fixed; bottom: 0; width: 100%; 
-            background: white; border-top-left-radius: 20px; border-top-right-radius: 20px;
-            display: flex; padding: 12px 0; z-index: 100; box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
-        }
-        .nav-btn { flex: 1; text-align: center; font-size: 9px; color: #ccc; text-decoration: none; transition: all 0.3s; font-weight: 600; letter-spacing: 0.5px; }
+        /* NAV */
+        .nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; padding: 12px 0; z-index: 100; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); border-radius: 20px 20px 0 0; }
+        .nav-btn { flex: 1; text-align: center; font-size: 9px; color: #ccc; text-decoration: none; font-weight: 600; }
         .nav-btn span { display: block; font-size: 18px; margin-bottom: 4px; filter: grayscale(100%); opacity: 0.5; }
         .nav-btn.active { color: var(--primary); font-weight: 800; }
         .nav-btn.active span { filter: grayscale(0%); opacity: 1; transform: translateY(-3px); }
 
-        .rules-box { background: white; padding: 20px; border-radius: 15px; box-shadow: var(--card-shadow); }
-        .rules-box h3 { border-bottom: 2px solid var(--accent); padding-bottom: 8px; color: var(--primary); font-size: 16px; margin-top: 20px; font-weight: 800; }
-        .rules-box ul { padding-left: 20px; color: #555; line-height: 1.6; font-size: 13px; font-weight: 500; }
+        /* KLASEMEN TABLE */
+        .grup-card { background: white; border-radius: 15px; margin-bottom: 20px; overflow: hidden; box-shadow: 0 4px 15px rgba(194, 24, 91, 0.08); }
+        .grup-header { background: #FFF0F5; padding: 12px 15px; color: var(--primary); font-size: 14px; font-weight: 800; border-bottom: 1px solid #fce4ec; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        th { background: white; color: #999; padding: 10px 5px; font-size: 9px; font-weight: 800; border-bottom: 2px solid #f0f0f0; }
+        td { padding: 12px 5px; border-bottom: 1px solid #f9f9f9; text-align: center; color: #444; font-weight: 600; }
+        th:nth-child(2), td:nth-child(2) { text-align: left; padding-left: 10px; width: 40%; }
+        tr.status-win { background-color: #FFFDE7; }
+        .legend-box { display: flex; gap: 10px; justify-content: center; font-size: 10px; color: #888; margin-bottom: 15px; flex-wrap: wrap; }
+        .legend-tag { background: white; padding: 4px 10px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); font-weight: 600; }
+        .rules-box { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
     </style>
 </head>
 <body>
-
     <script>
+        // CONFIG LINK
         const LINK_JADWAL   = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTolh-NcLcFcvFVL-YhmLvN2H8wEmVvmmxsPKt4JbWiH07PbvGTRd8LuJ9PY9b6kowTMWRQwNZa4xGF/pub?gid=0&single=true&output=csv";
         const LINK_KLASEMEN = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTolh-NcLcFcvFVL-YhmLvN2H8wEmVvmmxsPKt4JbWiH07PbvGTRd8LuJ9PY9b6kowTMWRQwNZa4xGF/pub?gid=1172853209&single=true&output=csv";
     </script>
 
     <div class="header-wrapper">
-        <div class="padel-ball-bg"></div>
         <div class="refresh-btn" id="btnRefresh" onclick="manualRefresh()">🔄</div>
-        
         <div class="header-content">
             <h1 class="header-title">PADEL LOVERS</h1>
             <div class="header-sub">Mixed Doubles Lower Bronze</div>
@@ -183,10 +119,7 @@
     </div>
 
     <div id="view-jadwal" class="container">
-        <div id="loading" class="loading-container">
-            <div class="bouncing-ball"></div>
-            <div class="loading-text">Memuat Data...</div>
-        </div>
+        <div id="loading" class="loading-container"><div class="bouncing-ball"></div></div>
         <div id="jadwal-content"></div>
     </div>
 
@@ -194,35 +127,23 @@
         <div class="legend-box">
             <span class="legend-tag"><b>MP:</b> Matches</span>
             <span class="legend-tag"><b>W:</b> Win</span>
-            <span class="legend-tag"><b>L:</b> Lose</span>
             <span class="legend-tag"><b>GD:</b> Diff</span>
         </div>
         <div id="klasemen-content"></div>
     </div>
 
     <div id="view-bagan" class="container hidden">
-        <h2 style="text-align:center; color:var(--primary); font-size:16px; margin-bottom:15px; font-weight:800;">Babak Gugur (Knockout)</h2>
-        <div id="bagan-content" style="text-align:center; color:#777; font-size:13px; padding: 20px;">Belum ada pertandingan babak gugur.</div>
+        <h2 style="text-align:center; color:var(--primary); font-size:16px; margin-bottom:15px; font-weight:800;">Knockout Stage</h2>
+        <div id="bagan-content" style="text-align:center; color:#777; font-size:13px; padding: 20px;"></div>
     </div>
 
     <div id="view-peraturan" class="container hidden rules-box">
-        <h3>A. Waktu & WO</h3>
-        <ul>
-            <li>Toleransi keterlambatan: <b>10 MENIT</b>.</li>
-            <li>Lewat 10 menit = <b>Kalah WO (0-4)</b>.</li>
-            <li>Pemain WO kalah prioritas jika poin seri di klasemen.</li>
-        </ul>
-        <h3>B. Format Skor</h3>
-        <ul>
-            <li><b>Penyisihan:</b> First to 4 games (3-3 Sudden Death).</li>
-            <li><b>Semifinal/Final:</b> First to 6 (5-5 Tie Break).</li>
-            <li><b>Golden Point:</b> Saat 40-40, penerima servis pilih sisi.</li>
-        </ul>
-        <h3>C. Sistem Poin</h3>
-        <ul>
-            <li><b>Menang:</b> 1 Poin</li>
-            <li><b>Kalah:</b> 0 Poin</li>
-            <li><b>Tie-Breaker:</b> Selisih Game > Head-to-Head > Poin Kecil.</li>
+        <h3 style="color:var(--primary); margin-top:0;">Peraturan Singkat</h3>
+        <ul style="padding-left:20px; color:#555; font-size:13px; line-height:1.6;">
+            <li>Waktu Toleransi: <b>10 Menit</b> (Lewat = WO 0-4).</li>
+            <li>Penyisihan: First to 4 (3-3 Sudden Death).</li>
+            <li>Semifinal/Final: First to 6 (5-5 Tie Break).</li>
+            <li>Golden Point (No Ad) saat 40-40.</li>
         </ul>
     </div>
 
@@ -234,49 +155,153 @@
     </div>
 
     <script>
-        let liveStatusMemory = {}; 
         let isRefreshing = false;
 
-        // FUNGSI REFRESH MANUAL (HARD REFRESH)
-        function manualRefresh() {
-            if (isRefreshing) return; 
-            
-            isRefreshing = true;
-            const btn = document.getElementById('btnRefresh');
-            btn.classList.add('spin-anim');
-            
-            // JIKA MANUAL: Kirim parameter 'true'
-            muatData(true).then(() => {
-                setTimeout(() => {
-                    btn.classList.remove('spin-anim');
-                    isRefreshing = false;
-                }, 1000); 
-            });
+        // --- SISTEM SMART UPDATE (ANTI-FLICKER) ---
+        // Kita tidak akan menghapus innerHTML, tapi mencari elemen ID dan mengupdatenya.
+
+        function generateId(timA, timB) {
+            // Membuat ID unik tanpa spasi
+            return `m-${(timA||'').replace(/\s+/g, '')}-${(timB||'').replace(/\s+/g, '')}`;
         }
 
         async function muatData(force = false) {
             try {
-                let antiCache;
-                
-                if (force) {
-                    // JIKA MANUAL: Pakai waktu detik ini juga (FORCE UPDATE)
-                    antiCache = "&t=" + Date.now();
-                } else {
-                    // JIKA OTOMATIS: Pakai blok 12 detik (Hemat Kuota)
-                    antiCache = "&t=" + Math.floor(Date.now() / 12000);
-                }
-                
-                const respJ = await fetch(LINK_JADWAL + antiCache);
-                const textJ = await respJ.text();
-                const dataJadwal = csvKeJson(textJ);
-                tampilkanJadwal(dataJadwal);
-                tampilkanBagan(dataJadwal);
+                // Gunakan cache block 10 detik agar lebih stabil di mata Google
+                // Jika manual (force), baru gunakan detik ini
+                const timeStamp = force ? Date.now() : Math.floor(Date.now() / 10000); 
+                const antiCache = "&t=" + timeStamp;
 
+                // 1. JADWAL
+                const respJ = await fetch(LINK_JADWAL + antiCache);
+                const dataJadwal = csvKeJson(await respJ.text());
+                smartUpdateJadwal(dataJadwal);
+
+                // 2. KLASEMEN (Klasemen boleh redraw karena jarang berubah per detik)
                 const respK = await fetch(LINK_KLASEMEN + antiCache);
-                const textK = await respK.text();
-                const dataKlasemen = csvKeJson(textK);
+                const dataKlasemen = csvKeJson(await respK.text());
                 tampilkanKlasemen(dataKlasemen);
-            } catch (e) { console.error("Error:", e); }
+
+            } catch (e) { console.error("Error update:", e); }
+        }
+
+        function smartUpdateJadwal(data) {
+            document.getElementById('loading').style.display = 'none';
+            const containerJadwal = document.getElementById('jadwal-content');
+            const containerBagan = document.getElementById('bagan-content');
+            
+            // Pisahkan data
+            const matchPenyisihan = data.filter(m => !isKnockout(m.Babak));
+            const matchBagan = data.filter(m => isKnockout(m.Babak));
+
+            // Update UI Penyisihan
+            renderList(containerJadwal, matchPenyisihan);
+            // Update UI Bagan
+            renderList(containerBagan, matchBagan, true);
+        }
+
+        function isKnockout(babak) {
+            return babak && (babak.includes('QF') || babak.includes('SF') || babak.includes('Final'));
+        }
+
+        function renderList(container, dataList, isBagan = false) {
+            if (dataList.length === 0) {
+                if(container.innerHTML === "") container.innerHTML = "<p style='text-align:center;color:#999;font-size:12px'>Belum ada data.</p>";
+                return;
+            }
+
+            // Loop setiap data baru
+            dataList.forEach(m => {
+                const uid = generateId(m.Team_A, m.Team_B);
+                const elExist = document.getElementById(uid);
+                
+                // Logic Status
+                let rawStatus = (m.Status || "").toLowerCase();
+                let isLive = rawStatus.includes("live");
+                let isSelesai = rawStatus.includes("selesai") || rawStatus.includes("final");
+                let skornya = (m.Skor_A && m.Skor_B) ? `${m.Skor_A} - ${m.Skor_B}` : "VS";
+                let scoreClass = (skornya === "VS") ? "score-pill empty" : "score-pill";
+                
+                // Siapkan HTML Status Kanan
+                let metaRightHTML = "";
+                if (isLive) metaRightHTML = `<div class="live-indicator"><div class="dot-live"></div> LIVE</div>`;
+                else metaRightHTML = `<div class="meta-right">${m.Jam ? 'Jam: '+m.Jam : ''} ${m.Court ? '| C-'+m.Court : ''}</div>`;
+
+                // A. JIKA KARTU SUDAH ADA -> UPDATE SAJA (Jangan Gambar Ulang)
+                if (elExist) {
+                    // Update Kelas (Warna/Live/Redup)
+                    if(isLive) elExist.className = "match-card is-live";
+                    else if(isSelesai) elExist.className = "match-card is-finished";
+                    else elExist.className = "match-card";
+
+                    // Update Skor (Hanya jika beda agar tidak kedip)
+                    const elScore = elExist.querySelector('.score-pill');
+                    if(elScore.innerText !== skornya) {
+                        elScore.innerText = skornya;
+                        elScore.className = scoreClass;
+                    }
+
+                    // Update Status Kanan (Live/Jam)
+                    const elMetaRight = elExist.querySelector('.meta-right-wrapper');
+                    if(elMetaRight.innerHTML !== metaRightHTML) {
+                        elMetaRight.innerHTML = metaRightHTML;
+                    }
+
+                } else {
+                    // B. JIKA KARTU BELUM ADA -> BUAT BARU
+                    const cardHTML = `
+                    <div id="${uid}" class="match-card ${isLive?'is-live':''} ${isSelesai?'is-finished':''}">
+                        <div class="match-meta">
+                            <div class="meta-left">
+                                <span class="babak-pill">${m.Babak}</span>
+                                <span style="font-size:10px; font-weight:600; margin-left:5px">${isLive ? '' : m.Tanggal || ''}</span>
+                            </div>
+                            <div class="meta-right-wrapper">${metaRightHTML}</div>
+                        </div>
+                        <div class="match-body">
+                            <div class="team left">${m.Team_A || '...'}</div>
+                            <div class="${scoreClass}">${skornya}</div>
+                            <div class="team right">${m.Team_B || '...'}</div>
+                        </div>
+                    </div>`;
+                    container.insertAdjacentHTML('beforeend', cardHTML);
+                }
+            });
+        }
+
+        // --- FUNGSI STANDAR LAINNYA ---
+        function manualRefresh() {
+            if (isRefreshing) return;
+            isRefreshing = true;
+            const btn = document.getElementById('btnRefresh');
+            btn.classList.add('spin-anim');
+            muatData(true).then(() => {
+                setTimeout(() => { btn.classList.remove('spin-anim'); isRefreshing = false; }, 1000);
+            });
+        }
+
+        function tampilkanKlasemen(data) {
+            const div = document.getElementById('klasemen-content');
+            // Untuk klasemen, kita refresh total tidak apa-apa karena jarang dilihat live per detik
+            // Tapi kita cek dulu apakah datanya beda panjangnya untuk meminimalisir
+            let htmlBuffer = "";
+            
+            let grupData = {};
+            data.forEach(p => {
+                if(!grupData[p.Grup]) grupData[p.Grup] = [];
+                grupData[p.Grup].push(p);
+            });
+
+            for (let grup in grupData) {
+                grupData[grup].sort((a,b) => (b.Menang - a.Menang) || (b.Selisih_Game - a.Selisih_Game));
+                let barisHtml = "";
+                grupData[grup].forEach((Tim, index) => {
+                    let rowClass = (Tim.Status && Tim.Status.toLowerCase().includes('lolos')) ? 'class="status-win"' : '';
+                    barisHtml += `<tr ${rowClass}><td>${index+1}</td><td>${Tim.Nama_Pasangan}</td><td>${Tim.Menang||0}</td><td>${Tim.Selisih_Game||0}</td></tr>`;
+                });
+                htmlBuffer += `<div class="grup-card"><div class="grup-header">Grup ${grup}</div><table><thead><tr><th width="10">#</th><th>TIM</th><th width="15%">W</th><th width="15%">GD</th></tr></thead><tbody>${barisHtml}</tbody></table></div>`;
+            }
+            div.innerHTML = htmlBuffer;
         }
 
         function csvKeJson(csv) {
@@ -286,127 +311,11 @@
                 const values = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                 let obj = {};
                 headers.forEach((h, i) => {
-                    let val = values[i] || '';
-                    val = val.replace(/^"|"$/g, '').trim(); 
+                    let val = (values[i] || '').replace(/^"|"$/g, '').trim();
                     obj[h] = val;
                 });
                 return obj;
             });
-        }
-
-        function createMatchCard(m, isBagan) {
-            let skornya = (m.Skor_A && m.Skor_B) ? `${m.Skor_A} - ${m.Skor_B}` : "VS";
-            
-            let rawStatus = (m.Status || "").toLowerCase();
-            let isLive = rawStatus.includes("live");
-            let isSelesai = rawStatus.includes("selesai") || rawStatus.includes("final");
-            
-            let isVs = (skornya === "VS");
-            let scoreClass = isVs ? "score-pill empty" : "score-pill";
-            
-            let cardClass = "";
-            if (isLive) cardClass = "is-live";
-            else if (isSelesai) cardClass = "is-finished"; 
-
-            let infoHTML = "";
-            if (isLive) {
-                infoHTML = `<div class="live-indicator"><div class="dot-live"></div> LIVE</div>`;
-            } else {
-                let parts = [];
-                if(m.Jam) parts.push(`Jam: ${m.Jam}`);
-                if(m.Court) parts.push(`Court ${m.Court}`);
-                infoHTML = `<div class="meta-right">${parts.join(' &nbsp;|&nbsp; ')}</div>`;
-            }
-
-            return `
-            <div class="match-card ${cardClass}">
-                <div class="match-meta">
-                    <div class="meta-left">
-                        <span class="babak-pill">${m.Babak}</span>
-                        ${isLive ? '' : `<span style="font-size:10px; font-weight:600;">${m.Tanggal}</span>`}
-                    </div>
-                    ${infoHTML}
-                </div>
-                
-                <div class="match-body">
-                    <div class="team left">${m.Team_A || '...'}</div>
-                    <div class="${scoreClass}">${skornya}</div>
-                    <div class="team right">${m.Team_B || '...'}</div>
-                </div>
-            </div>`;
-        }
-
-        function tampilkanJadwal(data) {
-            const div = document.getElementById('jadwal-content');
-            div.innerHTML = "";
-            document.getElementById('loading').style.display = 'none';
-            let count = 0;
-            data.forEach(m => {
-                if(m.Babak.includes('QF') || m.Babak.includes('SF') || m.Babak.includes('Final')) return;
-                div.innerHTML += createMatchCard(m, false);
-                count++;
-            });
-            if(count === 0) div.innerHTML = '<p style="text-align:center; color:#888; font-size:12px;">Belum ada jadwal penyisihan.</p>';
-        }
-
-        function tampilkanBagan(data) {
-            const div = document.getElementById('bagan-content');
-            const dataBagan = data.filter(m => m.Babak.includes('QF') || m.Babak.includes('SF') || m.Babak.includes('Final'));
-            if(dataBagan.length > 0) {
-                div.innerHTML = ""; 
-                dataBagan.forEach(m => { div.innerHTML += createMatchCard(m, true); });
-            }
-        }
-
-        function tampilkanKlasemen(data) {
-            let grupData = {};
-            data.forEach(p => {
-                if(!grupData[p.Grup]) grupData[p.Grup] = [];
-                grupData[p.Grup].push(p);
-            });
-
-            const div = document.getElementById('klasemen-content');
-            div.innerHTML = "";
-
-            for (let grup in grupData) {
-                grupData[grup].sort((a,b) => (b.Menang - a.Menang) || (b.Selisih_Game - a.Selisih_Game));
-                
-                let barisHtml = "";
-                grupData[grup].forEach((Tim, index) => {
-                    let statusCek = (Tim.Status || Tim.Poin || "").toLowerCase();
-                    let rowClass = "";
-                    if (statusCek.includes("win") || statusCek.includes("lolos")) {
-                        rowClass = 'class="status-win"';
-                    }
-                    
-                    barisHtml += `<tr ${rowClass}>
-                        <td>${index + 1}</td>
-                        <td>${Tim.Nama_Pasangan}</td>
-                        <td>${Tim.Main || 0}</td>
-                        <td>${Tim.Menang || 0}</td>
-                        <td>${Tim.Kalah || 0}</td>
-                        <td>${Tim.Selisih_Game || 0}</td>
-                    </tr>`;
-                });
-
-                div.innerHTML += `
-                <div class="grup-card">
-                    <div class="grup-header">Grup ${grup}</div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th width="10">#</th>
-                                <th>TIM</th>
-                                <th width="10%" title="Matches">MP</th>
-                                <th width="10%" title="Win">W</th>
-                                <th width="10%" title="Lose">L</th>
-                                <th width="10%" title="Diff">GD</th>
-                            </tr>
-                        </thead>
-                        <tbody>${barisHtml}</tbody>
-                    </table>
-                </div>`;
-            }
         }
 
         function bukaHalaman(id) {
@@ -417,11 +326,10 @@
             document.getElementById('nav-' + id).classList.add('active');
         }
 
-        const lastPage = localStorage.getItem('halamanTerakhir') || 'jadwal';
-        bukaHalaman(lastPage);
-
+        // INIT
+        bukaHalaman(localStorage.getItem('halamanTerakhir') || 'jadwal');
         muatData();
-        setInterval(muatData, 12000); 
+        setInterval(() => muatData(false), 12000); // Auto refresh 12 detik (Safe Mode)
     </script>
 </body>
 </html>
