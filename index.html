@@ -1,264 +1,36 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PADEL LOVERS - Live Score</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
-    
-    <style>
-        /* --- TEMA FINAL --- */
-        :root { 
-            --primary: #C2185B;      
-            --primary-dark: #880E4F; 
-            --accent: #F8BBD0;       
-            --bg-color: #FDF2F5;     
-            --live-neon: #76FF03;    
-            --text-dark: #333;
-            --card-shadow: 0 4px 15px rgba(194, 24, 91, 0.08);
-        }
-        
-        body { 
-            font-family: 'Montserrat', sans-serif; 
-            background-color: var(--bg-color);
-            background-image: radial-gradient(#E91E63 0.5px, transparent 0.5px);
-            background-size: 20px 20px;
-            margin: 0; padding-bottom: 90px; color: var(--text-dark); 
-        }
-        
-        /* --- HEADER --- */
-        .header-wrapper {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            padding: 25px 20px 40px 20px;
-            text-align: center; color: white;
-            border-bottom-left-radius: 30px; border-bottom-right-radius: 30px;
-            position: sticky; top: 0; z-index: 99;
-            box-shadow: 0 4px 20px rgba(136, 14, 79, 0.3);
-            overflow: hidden; margin-bottom: 20px;
-        }
-
-        /* Tombol Refresh Manual */
-        .refresh-btn {
-            position: absolute; top: 20px; right: 20px;
-            background: rgba(255,255,255,0.2); backdrop-filter: blur(5px);
-            width: 35px; height: 35px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; z-index: 100; transition: all 0.2s;
-            border: 1px solid rgba(255,255,255,0.3); font-size: 18px;
-        }
-        .refresh-btn:active { transform: scale(0.9); background: rgba(255,255,255,0.4); }
-        .spin-anim { animation: spin 1s linear infinite; pointer-events: none; opacity: 0.7; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-
-        .padel-ball-bg {
-            position: absolute; top: -20px; right: -20px; width: 120px; height: 120px;
-            border-radius: 50%; background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.15); z-index: 0; pointer-events: none;
-        }
-        .padel-ball-bg::before {
-            content: ''; position: absolute; top: 15%; left: 15%; right: 15%; bottom: 15%;
-            border-radius: 50%; border: 2px solid transparent;
-            border-left-color: rgba(255, 255, 255, 0.2); border-top-color: rgba(255, 255, 255, 0.2);
-            transform: rotate(-45deg);
-        }
-
-        .header-content { position: relative; z-index: 1; pointer-events: none; }
-        .header-title { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .header-sub { font-size: 13px; font-weight: 600; margin-top: 4px; opacity: 0.95; color: #FFECB3; letter-spacing: 0.5px; }
-        .header-tag { 
-            display: inline-block; margin-top: 10px; 
-            background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; 
-            font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
-        }
-
-        .container { max-width: 500px; margin: 0 auto; padding: 0 15px; }
-        .hidden { display: none; }
-
-        /* Loading Animation */
-        .loading-container { text-align: center; padding: 50px 0; }
-        .bouncing-ball {
-            width: 15px; height: 15px; background: var(--primary); border-radius: 50%;
-            margin: 0 auto; animation: bounce 0.6s infinite alternate;
-        }
-        .loading-text { margin-top: 10px; font-size: 12px; color: var(--primary); font-weight: 600; }
-        @keyframes bounce { from { transform: translateY(0); opacity: 0.8; } to { transform: translateY(-20px); opacity: 1; } }
-
-        /* --- KARTU PERTANDINGAN --- */
-        .match-card { 
-            background: white; padding: 15px 20px; margin-bottom: 15px; 
-            border-radius: 20px; box-shadow: var(--card-shadow);
-            border: 1px solid rgba(194, 24, 91, 0.05); position: relative; transition: all 0.3s;
-        }
-        .match-card:active { transform: scale(0.98); }
-
-        .match-meta { 
-            display: flex; justify-content: space-between; align-items: center; 
-            font-size: 11px; color: #888; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px dashed #eee;
-        }
-        .meta-right { font-weight: 600; color: #666; font-size: 10px; letter-spacing: 0.5px; } 
-        .babak-pill { background: #FFF3E0; color: #E65100; padding: 3px 10px; border-radius: 10px; font-weight: 800; font-size: 10px; text-transform: uppercase; }
-
-        .match-body { display: flex; align-items: center; justify-content: space-between; }
-        .team { flex: 1; font-weight: 600; font-size: 14px; line-height: 1.3; color: #444; }
-        .team.left { text-align: left; }
-        .team.right { text-align: right; }
-        
-        .score-pill { 
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark)); 
-            color: white; padding: 6px 18px; border-radius: 30px; 
-            font-size: 18px; font-weight: 800; min-width: 50px; text-align: center; 
-            box-shadow: 0 4px 10px rgba(194, 24, 91, 0.2); margin: 0 10px;
-        }
-        .score-pill.empty { 
-            background: white; color: var(--primary); border: 2px solid var(--accent);
-            box-shadow: none; font-size: 14px; padding: 4px 14px;
-        }
-
-        /* --- LOGIKA STATUS: LIVE & SELESAI --- */
-        /* 1. LIVE (Hijau Neon) */
-        .match-card.is-live { border: 2px solid var(--live-neon); box-shadow: 0 0 15px rgba(118, 255, 3, 0.3); }
-        .match-card.is-live .score-pill {
-            background: var(--live-neon); color: black; box-shadow: 0 0 10px var(--live-neon);
-            animation: pulse-score 1.5s infinite;
-        }
-        
-        /* 2. SELESAI (Dimmed / Redup) */
-        .match-card.is-finished { 
-            opacity: 0.6; filter: grayscale(100%); background: #f2f2f2; box-shadow: none; border: 1px solid #ddd; 
-        }
-        .match-card.is-finished .score-pill { background: #999; color: white; box-shadow: none; }
-        
-        @keyframes pulse-score { 50% { transform: scale(1.05); } }
-        
-        .live-indicator { 
-            position: absolute; top: 12px; right: 15px;
-            color: #4CAF50; font-weight: 800; font-size: 10px; 
-            display: flex; align-items: center; gap: 4px;
-        }
-        .dot-live { width: 8px; height: 8px; background: var(--live-neon); border-radius: 50%; animation: blink 1s infinite; }
-
-        /* Klasemen & Navigasi tetap sama */
-        .grup-card { background: white; border-radius: 15px; margin-bottom: 20px; overflow: hidden; box-shadow: var(--card-shadow); border: none; }
-        .grup-header { background: #FFF0F5; padding: 12px 15px; color: var(--primary); font-size: 14px; font-weight: 800; border-bottom: 1px solid #fce4ec; letter-spacing: 0.5px; }
-        table { width: 100%; border-collapse: collapse; font-size: 12px; }
-        th { background: white; color: #999; padding: 10px 5px; font-size: 9px; font-weight: 800; border-bottom: 2px solid #f0f0f0; text-transform: uppercase; }
-        td { padding: 12px 5px; border-bottom: 1px solid #f9f9f9; text-align: center; color: #444; font-weight: 600; }
-        th:nth-child(2), td:nth-child(2) { text-align: left; padding-left: 10px; width: 40%; }
-        tr.status-win { background-color: #FFFDE7; }
-        tr.status-win td { color: #F57F17; font-weight: 800; }
-        tr.status-win td:nth-child(2) { color: var(--primary); }
-        .legend-box { display: flex; gap: 10px; justify-content: center; font-size: 10px; color: #888; margin-bottom: 15px; flex-wrap: wrap; }
-        .legend-tag { background: white; padding: 4px 10px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); font-weight: 600; }
-
-        .nav { 
-            position: fixed; bottom: 0; width: 100%; 
-            background: white; border-top-left-radius: 20px; border-top-right-radius: 20px;
-            display: flex; padding: 12px 0; z-index: 100; box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
-        }
-        .nav-btn { flex: 1; text-align: center; font-size: 9px; color: #ccc; text-decoration: none; transition: all 0.3s; font-weight: 600; letter-spacing: 0.5px; }
-        .nav-btn span { display: block; font-size: 18px; margin-bottom: 4px; filter: grayscale(100%); opacity: 0.5; }
-        .nav-btn.active { color: var(--primary); font-weight: 800; }
-        .nav-btn.active span { filter: grayscale(0%); opacity: 1; transform: translateY(-3px); }
-
-        .rules-box { background: white; padding: 20px; border-radius: 15px; box-shadow: var(--card-shadow); }
-        .rules-box h3 { border-bottom: 2px solid var(--accent); padding-bottom: 8px; color: var(--primary); font-size: 16px; margin-top: 20px; font-weight: 800; }
-        .rules-box ul { padding-left: 20px; color: #555; line-height: 1.6; font-size: 13px; font-weight: 500; }
-    </style>
-</head>
-<body>
-
-    <script>
-        const LINK_JADWAL   = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTolh-NcLcFcvFVL-YhmLvN2H8wEmVvmmxsPKt4JbWiH07PbvGTRd8LuJ9PY9b6kowTMWRQwNZa4xGF/pub?gid=0&single=true&output=csv";
-        const LINK_KLASEMEN = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTolh-NcLcFcvFVL-YhmLvN2H8wEmVvmmxsPKt4JbWiH07PbvGTRd8LuJ9PY9b6kowTMWRQwNZa4xGF/pub?gid=1172853209&single=true&output=csv";
-    </script>
-
-    <div class="header-wrapper">
-        <div class="padel-ball-bg"></div>
-        <div class="refresh-btn" id="btnRefresh" onclick="manualRefresh()">🔄</div>
-        
-        <div class="header-content">
-            <h1 class="header-title">PADEL LOVERS</h1>
-            <div class="header-sub">Mixed Doubles Lower Bronze</div>
-            <div class="header-tag">Live Score & Schedule</div>
-        </div>
-    </div>
-
-    <div id="view-jadwal" class="container">
-        <div id="loading" class="loading-container">
-            <div class="bouncing-ball"></div>
-            <div class="loading-text">Memuat Data...</div>
-        </div>
-        <div id="jadwal-content"></div>
-    </div>
-
-    <div id="view-klasemen" class="container hidden">
-        <div class="legend-box">
-            <span class="legend-tag"><b>MP:</b> Matches</span>
-            <span class="legend-tag"><b>W:</b> Win</span>
-            <span class="legend-tag"><b>L:</b> Lose</span>
-            <span class="legend-tag"><b>GD:</b> Diff</span>
-        </div>
-        <div id="klasemen-content"></div>
-    </div>
-
-    <div id="view-bagan" class="container hidden">
-        <h2 style="text-align:center; color:var(--primary); font-size:16px; margin-bottom:15px; font-weight:800;">Babak Gugur (Knockout)</h2>
-        <div id="bagan-content" style="text-align:center; color:#777; font-size:13px; padding: 20px;">Belum ada pertandingan babak gugur.</div>
-    </div>
-
-    <div id="view-peraturan" class="container hidden rules-box">
-        <h3>A. Waktu & WO</h3>
-        <ul>
-            <li>Toleransi keterlambatan: <b>10 MENIT</b>.</li>
-            <li>Lewat 10 menit = <b>Kalah WO (0-4)</b>.</li>
-            <li>Pemain WO kalah prioritas jika poin seri di klasemen.</li>
-        </ul>
-        <h3>B. Format Skor</h3>
-        <ul>
-            <li><b>Penyisihan:</b> First to 4 games (3-3 Sudden Death).</li>
-            <li><b>Semifinal/Final:</b> First to 6 (5-5 Tie Break).</li>
-            <li><b>Golden Point:</b> Saat 40-40, penerima servis pilih sisi.</li>
-        </ul>
-        <h3>C. Sistem Poin</h3>
-        <ul>
-            <li><b>Menang:</b> 1 Poin</li>
-            <li><b>Kalah:</b> 0 Poin</li>
-            <li><b>Tie-Breaker:</b> Selisih Game > Head-to-Head > Poin Kecil.</li>
-        </ul>
-    </div>
-
-    <div class="nav">
-        <a id="nav-jadwal" class="nav-btn active" onclick="bukaHalaman('jadwal')"><span>📅</span>Jadwal</a>
-        <a id="nav-klasemen" class="nav-btn" onclick="bukaHalaman('klasemen')"><span>📊</span>Klasemen</a>
-        <a id="nav-bagan" class="nav-btn" onclick="bukaHalaman('bagan')"><span>🏆</span>Bagan</a>
-        <a id="nav-peraturan" class="nav-btn" onclick="bukaHalaman('peraturan')"><span>📜</span>Aturan</a>
-    </div>
-
-    <script>
+<script>
         let liveStatusMemory = {}; 
         let isRefreshing = false;
 
-        // FUNGSI REFRESH MANUAL (Dengan Jeda 3 Detik)
+        // FUNGSI REFRESH MANUAL (HARD REFRESH)
         function manualRefresh() {
-            if (isRefreshing) return; // Cegah spam klik
+            if (isRefreshing) return; 
             
             isRefreshing = true;
             const btn = document.getElementById('btnRefresh');
-            btn.classList.add('spin-anim'); // Animasi putar
+            btn.classList.add('spin-anim');
             
-            muatData().then(() => {
+            // Logika Baru: Kirim parameter 'true' untuk memaksa update detik ini juga
+            muatData(true).then(() => {
                 setTimeout(() => {
                     btn.classList.remove('spin-anim');
                     isRefreshing = false;
-                }, 2000); // Tahan animasi minimal 2 detik biar terlihat kerja
+                }, 1000); // Animasi minimal 1 detik
             });
         }
 
-        async function muatData() {
+        // MENERIMA PARAMETER 'force'
+        async function muatData(force = false) {
             try {
-                const timeBlock = Math.floor(Date.now() / 12000); 
-                const antiCache = "&t=" + timeBlock; // Kode anti-cache
+                let antiCache;
+                
+                if (force) {
+                    // JIKA MANUAL: Pakai waktu detik ini juga (Anti-Cache Ekstrem)
+                    antiCache = "&t=" + Date.now();
+                } else {
+                    // JIKA OTOMATIS: Pakai blok 12 detik (Hemat Kuota)
+                    antiCache = "&t=" + Math.floor(Date.now() / 12000);
+                }
                 
                 const respJ = await fetch(LINK_JADWAL + antiCache);
                 const textJ = await respJ.text();
@@ -291,21 +63,18 @@
         function createMatchCard(m, isBagan) {
             let skornya = (m.Skor_A && m.Skor_B) ? `${m.Skor_A} - ${m.Skor_B}` : "VS";
             
-            // --- LOGIKA STATUS CANGGIH (MANUAL CONTROL) ---
+            // LOGIKA STATUS
             let rawStatus = (m.Status || "").toLowerCase();
             let isLive = rawStatus.includes("live");
             let isSelesai = rawStatus.includes("selesai") || rawStatus.includes("final");
             
-            // Variabel Tampilan
             let isVs = (skornya === "VS");
             let scoreClass = isVs ? "score-pill empty" : "score-pill";
             
-            // Tentukan Kelas CSS Utama
             let cardClass = "";
             if (isLive) cardClass = "is-live";
-            else if (isSelesai) cardClass = "is-finished"; // Redup jika Status = "Selesai"
+            else if (isSelesai) cardClass = "is-finished"; 
 
-            // Tentukan Info Kanan (Live / Waktu)
             let infoHTML = "";
             if (isLive) {
                 infoHTML = `<div class="live-indicator"><div class="dot-live"></div> LIVE</div>`;
@@ -421,5 +190,3 @@
         muatData();
         setInterval(muatData, 12000); 
     </script>
-</body>
-</html>
