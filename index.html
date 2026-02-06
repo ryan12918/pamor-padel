@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
     
     <style>
-        /* --- TEMA UTAMA --- */
+        /* --- TEMA UTAMA (Warna Tidak Berubah) --- */
         :root { 
             --primary: #C2185B;      
             --primary-dark: #880E4F; 
@@ -28,28 +28,42 @@
             margin: 0; padding-bottom: 80px; color: var(--text-dark); 
         }
         
-        /* HEADER (Compact & Not Sticky) */
+        /* HEADER (Compact Version) */
         .header-wrapper {
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             padding: 15px 15px 25px 15px; 
             text-align: center; color: white;
             border-bottom-left-radius: 25px; border-bottom-right-radius: 25px;
-            position: relative; 
-            z-index: 99; 
+            position: relative; z-index: 99; 
             box-shadow: 0 4px 15px rgba(136, 14, 79, 0.2);
             overflow: hidden; margin-bottom: 15px;
         }
-        .padel-ball-bg {
-            position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; 
-            border-radius: 50%; background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.15); z-index: 0; pointer-events: none;
+
+        /* --- UPDATE: DESAIN RAKET PADEL BARU DI HEADER --- */
+        .padel-racket-bg {
+            position: absolute;
+            top: -40px;
+            right: -50px;
+            width: 180px; /* Ukuran besar */
+            height: 200px;
+            /* Bentuk kepala raket padel (rounded rectangle) */
+            border-radius: 90px 90px 60px 60px;
+            border: 3px solid rgba(255, 255, 255, 0.15); /* Frame luar */
+            /* POLA LUBANG RAKET (CSS Pattern) */
+            background-image: radial-gradient(rgba(255, 255, 255, 0.2) 15%, transparent 16%);
+            background-size: 20px 20px; /* Jarak antar lubang */
+            background-position: center;
+            transform: rotate(30deg); /* Miring agar dinamis */
+            pointer-events: none; /* Tidak bisa diklik */
+            z-index: 0;
         }
+
         .header-content { position: relative; z-index: 1; }
         .header-title { margin: 0; font-size: 22px; font-weight: 800; letter-spacing: 1px; } 
         .header-sub { font-size: 12px; font-weight: 600; margin-top: 2px; opacity: 0.95; color: #FFECB3; }
         .header-tag { display: inline-block; margin-top: 8px; background: rgba(255,255,255,0.2); padding: 3px 10px; border-radius: 15px; font-size: 9px; font-weight: 800; }
 
-        /* LOADING ANIMATION (Compact) */
+        /* LOADING ANIMATION (Compact Global) */
         .loading-container { text-align: center; padding: 20px 0; position: relative; z-index: 50; }
         .padel-ball-anim {
             width: 30px; height: 30px; background: var(--padel-neon); border-radius: 50%;
@@ -71,16 +85,10 @@
 
         /* KARTU PERTANDINGAN (COMPACT VERSION) */
         .match-card { 
-            background: white; 
-            padding: 10px 15px; 
-            margin-bottom: 10px; 
-            border-radius: 15px; 
-            box-shadow: var(--card-shadow);
-            border: 1px solid rgba(194, 24, 91, 0.05); 
-            position: relative; 
-            transition: transform 0.2s;
+            background: white; padding: 10px 15px; margin-bottom: 10px; 
+            border-radius: 15px; box-shadow: var(--card-shadow);
+            border: 1px solid rgba(194, 24, 91, 0.05); position: relative; transition: transform 0.2s;
         }
-        
         .card-header-row { margin-bottom: 8px; border-bottom: 1px dashed #eee; padding-bottom: 6px; }
         .babak-pill { background: #FFF3E0; color: #E65100; padding: 3px 10px; border-radius: 6px; font-weight: 800; font-size: 10px; text-transform: uppercase; display: inline-block; }
         
@@ -99,18 +107,7 @@
         .team.left { text-align: left; }
         .team.right { text-align: right; }
         
-        .score-pill { 
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark)); 
-            color: white; 
-            padding: 5px 14px; 
-            border-radius: 20px; 
-            font-size: 18px; 
-            font-weight: 800; 
-            min-width: 50px; 
-            text-align: center; 
-            box-shadow: 0 3px 8px rgba(194, 24, 91, 0.2); 
-            margin: 0 10px; 
-        }
+        .score-pill { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; padding: 5px 14px; border-radius: 20px; font-size: 18px; font-weight: 800; min-width: 50px; text-align: center; box-shadow: 0 3px 8px rgba(194, 24, 91, 0.2); margin: 0 10px; }
         .score-pill.empty { background: white; color: var(--primary); border: 2px solid var(--accent); box-shadow: none; font-size: 13px; padding: 3px 12px; }
 
         /* TABEL & NAV (Compact) */
@@ -128,7 +125,7 @@
         .nav-btn.active { color: var(--primary); font-weight: 800; }
         .nav-btn.active span { filter: grayscale(0%); opacity: 1; transform: translateY(-2px); }
         
-        /* ATURAN LENGKAP KEMBALI */
+        /* ATURAN (Lengkap) */
         .rules-box { background: white; padding: 15px; border-radius: 15px; box-shadow: var(--card-shadow); }
         .rules-box h3 { border-bottom: 2px solid var(--accent); padding-bottom: 6px; color: var(--primary); font-size: 14px; margin-top: 15px; font-weight: 800; }
         .rules-box ul { padding-left: 18px; color: #555; line-height: 1.5; font-size: 12px; font-weight: 500; }
@@ -142,7 +139,7 @@
     </script>
 
     <div class="header-wrapper">
-        <div class="padel-ball-bg"></div>
+        <div class="padel-racket-bg"></div>
         <div class="header-content">
             <h1 class="header-title">PADEL LOVERS</h1>
             <div class="header-sub">Mixed Doubles Lower Bronze</div>
