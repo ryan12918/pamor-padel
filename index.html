@@ -15,6 +15,7 @@
             --accent: #F8BBD0;       
             --bg-color: #FDF2F5;     
             --live-neon: #76FF03;    
+            --padel-neon: #CCFF00; /* Warna Bola Padel */
             --text-dark: #333;
             --card-shadow: 0 4px 15px rgba(194, 24, 91, 0.08);
         }
@@ -48,77 +49,77 @@
         .container { max-width: 500px; margin: 0 auto; padding: 0 15px; }
         .hidden { display: none; }
 
-        /* LOADING */
-        .loading-container { text-align: center; padding: 50px 0; }
-        .bouncing-ball { width: 15px; height: 15px; background: var(--primary); border-radius: 50%; margin: 0 auto; animation: bounce 0.6s infinite alternate; }
-        @keyframes bounce { from { transform: translateY(0); opacity: 0.8; } to { transform: translateY(-20px); opacity: 1; } }
-        .loading-text { margin-top: 10px; font-size: 12px; color: var(--primary); font-weight: 600; }
+        /* --- LOADING SCREEN GLOBAL (BOLA PADEL CSS ART) --- */
+        .loading-container { 
+            text-align: center; padding: 40px 0; 
+            /* Agar muncul di tab manapun */
+            position: relative; z-index: 50;
+        }
+        
+        .padel-ball-anim {
+            width: 35px; height: 35px;
+            background: var(--padel-neon); /* Hijau Stabilo Padel */
+            border-radius: 50%;
+            position: relative;
+            margin: 0 auto 10px;
+            box-shadow: inset -3px -3px 5px rgba(0,0,0,0.1), 0 10px 10px rgba(0,0,0,0.1);
+            animation: bounce 0.6s infinite alternate cubic-bezier(0.5, 0.05, 1, 0.5);
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
 
-        /* --- KARTU PERTANDINGAN (LAYOUT BARU) --- */
+        /* Garis Putih Bola Padel (Seams) */
+        .padel-ball-anim::before, .padel-ball-anim::after {
+            content: ''; position: absolute;
+            border: 2px solid white;
+            border-radius: 50%;
+            background: transparent;
+        }
+        /* Garis Lengkung 1 */
+        .padel-ball-anim::before {
+            width: 26px; height: 26px;
+            top: -8px; left: -6px;
+        }
+        /* Garis Lengkung 2 */
+        .padel-ball-anim::after {
+            width: 26px; height: 26px;
+            bottom: -8px; right: -6px;
+        }
+
+        .loading-text { margin-top: 15px; font-size: 12px; color: var(--primary); font-weight: 700; letter-spacing: 0.5px; }
+
+        @keyframes bounce { 
+            0% { transform: translateY(0) scale(1.1, 0.9); } /* Gepeng saat kena tanah */
+            100% { transform: translateY(-40px) scale(0.95, 1.05); } /* Loncat ke atas */
+        }
+
+        /* --- KARTU PERTANDINGAN --- */
         .match-card { 
             background: white; padding: 15px 20px; margin-bottom: 15px; 
             border-radius: 20px; box-shadow: var(--card-shadow);
             border: 1px solid rgba(194, 24, 91, 0.05); position: relative; transition: transform 0.2s;
         }
+        .card-header-row { margin-bottom: 12px; border-bottom: 1px dashed #eee; padding-bottom: 8px; }
+        .babak-pill { background: #FFF3E0; color: #E65100; padding: 4px 12px; border-radius: 8px; font-weight: 800; font-size: 11px; text-transform: uppercase; display: inline-block; }
         
-        /* Baris 1: Judul Babak (Sendirian di atas) */
-        .card-header-row {
-            margin-bottom: 12px;
-            border-bottom: 1px dashed #eee;
-            padding-bottom: 8px;
-        }
-        .babak-pill { 
-            background: #FFF3E0; color: #E65100; padding: 4px 12px; 
-            border-radius: 8px; font-weight: 800; font-size: 11px; 
-            text-transform: uppercase; display: inline-block;
-        }
-
-        /* Baris 2: Meta Data (Tanggal, Jam, Court, Live) */
-        .card-meta-row {
-            display: flex; justify-content: space-between; align-items: center;
-            font-size: 11px; color: #888; margin-bottom: 15px;
-        }
+        .card-meta-row { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #888; margin-bottom: 15px; }
         .meta-info { display: flex; align-items: center; gap: 8px; }
-        
-        /* Badge Court Agar Lebih Jelas */
-        .court-badge {
-            background: #f5f5f5; color: #555; padding: 2px 8px; 
-            border-radius: 4px; font-weight: 700; font-size: 10px; border: 1px solid #eee;
-        }
+        .court-badge { background: #f5f5f5; color: #555; padding: 2px 8px; border-radius: 4px; font-weight: 700; font-size: 10px; border: 1px solid #eee; }
 
-        /* LIVE Styles */
         .match-card.is-live { border: 2px solid var(--live-neon); box-shadow: 0 0 15px rgba(118, 255, 3, 0.3); }
-        .match-card.is-live .score-pill {
-            background: var(--live-neon); color: black; box-shadow: 0 0 10px var(--live-neon);
-            animation: pulse-score 1.5s infinite;
-        }
-        @keyframes pulse-score { 50% { transform: scale(1.05); } }
-        
-        .live-tag { 
-            color: #4CAF50; font-weight: 800; font-size: 10px; 
-            display: flex; align-items: center; gap: 5px;
-            background: #e8f5e9; padding: 2px 8px; border-radius: 4px;
-        }
+        .match-card.is-live .score-pill { background: var(--live-neon); color: black; box-shadow: 0 0 10px var(--live-neon); animation: pulse-score 1.5s infinite; }
+        .live-tag { color: #4CAF50; font-weight: 800; font-size: 10px; display: flex; align-items: center; gap: 5px; background: #e8f5e9; padding: 2px 8px; border-radius: 4px; }
         .dot-live { width: 8px; height: 8px; background: var(--live-neon); border-radius: 50%; animation: blink 1s infinite; }
+        @keyframes pulse-score { 50% { transform: scale(1.05); } }
 
-        /* Baris 3: Pemain & Skor */
         .match-body { display: flex; align-items: center; justify-content: space-between; }
         .team { flex: 1; font-weight: 600; font-size: 14px; line-height: 1.3; color: #444; }
         .team.left { text-align: left; }
         .team.right { text-align: right; }
         
-        .score-pill { 
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark)); 
-            color: white; padding: 8px 18px; border-radius: 30px; 
-            font-size: 20px; font-weight: 800; min-width: 60px; text-align: center; 
-            box-shadow: 0 4px 10px rgba(194, 24, 91, 0.2); margin: 0 12px;
-        }
-        .score-pill.empty { 
-            background: white; color: var(--primary); border: 2px solid var(--accent);
-            box-shadow: none; font-size: 14px; padding: 5px 15px;
-        }
+        .score-pill { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; padding: 8px 18px; border-radius: 30px; font-size: 20px; font-weight: 800; min-width: 60px; text-align: center; box-shadow: 0 4px 10px rgba(194, 24, 91, 0.2); margin: 0 12px; }
+        .score-pill.empty { background: white; color: var(--primary); border: 2px solid var(--accent); box-shadow: none; font-size: 14px; padding: 5px 15px; }
 
-        /* Navigation & Tables (Tetap sama) */
         .grup-card { background: white; border-radius: 15px; margin-bottom: 20px; overflow: hidden; box-shadow: var(--card-shadow); border: none; }
         .grup-header { background: #FFF0F5; padding: 12px 15px; color: var(--primary); font-size: 14px; font-weight: 800; border-bottom: 1px solid #fce4ec; }
         table { width: 100%; border-collapse: collapse; font-size: 12px; }
@@ -132,7 +133,6 @@
         .nav-btn span { display: block; font-size: 18px; margin-bottom: 4px; filter: grayscale(100%); opacity: 0.5; }
         .nav-btn.active { color: var(--primary); font-weight: 800; }
         .nav-btn.active span { filter: grayscale(0%); opacity: 1; transform: translateY(-3px); }
-        
         .rules-box { background: white; padding: 20px; border-radius: 15px; box-shadow: var(--card-shadow); }
         .rules-box h3 { border-bottom: 2px solid var(--accent); padding-bottom: 8px; color: var(--primary); font-size: 16px; margin-top: 20px; font-weight: 800; }
         .rules-box ul { padding-left: 20px; color: #555; line-height: 1.6; font-size: 13px; font-weight: 500; }
@@ -154,11 +154,12 @@
         </div>
     </div>
 
+    <div id="loading" class="loading-container">
+        <div class="padel-ball-anim"></div>
+        <div class="loading-text">Memuat Data Terbaru...</div>
+    </div>
+
     <div id="view-jadwal" class="container">
-        <div id="loading" class="loading-container">
-            <div class="bouncing-ball"></div>
-            <div class="loading-text">Memuat Data...</div>
-        </div>
         <div id="jadwal-content"></div>
     </div>
 
@@ -197,6 +198,11 @@
 
         async function muatData() {
             try {
+                // Tampilkan loading HANYA jika data belum ada (initial load)
+                // Jika ingin loading muncul setiap 12 detik, hapus 'if' ini.
+                // Tapi saran saya biarkan 'if' ini agar tidak ganggu mata saat auto-refresh.
+                // Namun sesuai request "saat saya refresh" (manual reload), loading ini sudah pasti muncul karena HTML reset.
+                
                 const timeBlock = Math.floor(Date.now() / 12000); 
                 const antiCache = "&t=" + timeBlock;
                 
@@ -210,6 +216,10 @@
                 const textK = await respK.text();
                 const dataKlasemen = csvKeJson(textK);
                 tampilkanKlasemen(dataKlasemen);
+                
+                // Sembunyikan Loading setelah semua data siap
+                document.getElementById('loading').style.display = 'none';
+                
             } catch (e) { console.error("Error:", e); }
         }
 
@@ -233,7 +243,6 @@
             let uniqueID = m.Team_A + m.Team_B;
             let isLiveActual = (m.Status && m.Status.toLowerCase().includes("live"));
             
-            // Logic Live
             let isLiveFinal = isLiveActual;
             if (isLiveActual) {
                 liveStatusMemory[uniqueID] = { timestamp: Date.now(), score: skornya };
@@ -249,43 +258,22 @@
             let scoreClass = isVs ? "score-pill empty" : "score-pill";
             let liveClass = isLiveFinal ? "is-live" : "";
             
-            // --- LOGIKA TAMPILAN BARU ---
-            
-            // 1. Info Court (Selalu muncul, baik Live maupun Tidak)
             let courtBadge = m.Court ? `<span class="court-badge">Court ${m.Court}</span>` : '';
             
-            // 2. Info Kiri (Live Tag ATAU Tanggal & Jam)
             let metaLeftHTML = "";
             if (isLiveFinal) {
-                // Jika Live: Tampilkan tombol LIVE + Court
-                metaLeftHTML = `
-                    <div class="meta-info">
-                        <div class="live-tag"><div class="dot-live"></div> LIVE</div>
-                        ${courtBadge}
-                    </div>`;
+                metaLeftHTML = `<div class="meta-info"><div class="live-tag"><div class="dot-live"></div> LIVE</div>${courtBadge}</div>`;
             } else {
-                // Jika Belum/Selesai: Tampilkan Tanggal, Jam + Court
                 let parts = [];
                 if(m.Tanggal) parts.push(m.Tanggal);
                 if(m.Jam) parts.push(m.Jam);
-                metaLeftHTML = `
-                    <div class="meta-info">
-                        <span>${parts.join(' &bull; ')}</span>
-                        ${courtBadge}
-                    </div>`;
+                metaLeftHTML = `<div class="meta-info"><span>${parts.join(' &bull; ')}</span>${courtBadge}</div>`;
             }
 
-            // HTML Structure: Header (Judul) dipisah dari Meta
             return `
             <div class="match-card ${liveClass}">
-                <div class="card-header-row">
-                    <span class="babak-pill">${m.Babak}</span>
-                </div>
-                
-                <div class="card-meta-row">
-                    ${metaLeftHTML}
-                </div>
-                
+                <div class="card-header-row"><span class="babak-pill">${m.Babak}</span></div>
+                <div class="card-meta-row">${metaLeftHTML}</div>
                 <div class="match-body">
                     <div class="team left">${m.Team_A || '...'}</div>
                     <div class="${scoreClass}">${skornya}</div>
@@ -297,7 +285,6 @@
         function tampilkanJadwal(data) {
             const div = document.getElementById('jadwal-content');
             div.innerHTML = "";
-            document.getElementById('loading').style.display = 'none';
             let count = 0;
             data.forEach(m => {
                 if(m.Babak.includes('QF') || m.Babak.includes('SF') || m.Babak.includes('Final')) return;
@@ -345,11 +332,7 @@
                 <div class="grup-card">
                     <div class="grup-header">Grup ${grup}</div>
                     <table>
-                        <thead>
-                            <tr>
-                                <th width="10">#</th><th>TIM</th><th width="10%">MP</th><th width="10%">W</th><th width="10%">L</th><th width="10%">GD</th>
-                            </tr>
-                        </thead>
+                        <thead><tr><th width="10">#</th><th>TIM</th><th width="10%">MP</th><th width="10%">W</th><th width="10%">L</th><th width="10%">GD</th></tr></thead>
                         <tbody>${barisHtml}</tbody>
                     </table>
                 </div>`;
@@ -359,6 +342,11 @@
         function bukaHalaman(id) {
             localStorage.setItem('halamanTerakhir', id);
             document.querySelectorAll('.container').forEach(e => e.classList.add('hidden'));
+            
+            // Perbaikan Logika:
+            // Pastikan loading TIDAK ikut tersembunyi karena class 'container'
+            // (Sudah aman karena div loading tidak pakai class container)
+            
             document.getElementById('view-' + id).classList.remove('hidden');
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById('nav-' + id).classList.add('active');
